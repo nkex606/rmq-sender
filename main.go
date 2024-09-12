@@ -16,8 +16,7 @@ func failOnError(err error, msg string) {
 }
 
 func main() {
-	// set rand seed
-	rand.Seed(int64(time.Now().UnixNano()))
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
@@ -40,7 +39,7 @@ func main() {
 	// generate some playload and send to rabbitmq continuously
 	for {
 		p := payload{
-			Name: "John",
+			Name: "AAA",
 			Age:  30,
 		}
 		body, err := json.Marshal(p)
@@ -59,7 +58,7 @@ func main() {
 		failOnError(err, "Failed to publish a message")
 		log.Printf(" [x] Sent %s", body)
 
-		time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
+		time.Sleep(time.Duration(r.Intn(10)) * time.Second)
 	}
 }
 
